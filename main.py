@@ -1,45 +1,14 @@
-import math
-
 import pygame
 from pygame.locals import QUIT
-import pymunk.pygame_util
-
 from car import Car
+from collisions import define_collision
+from game_setup import setup_game
 from track import Track
 
-
-# Collision handler callback function
-def car_and_wall_collision(arbiter, space, data):
-    print("Car collided with static line!")
-    pygame.quit()
-    exit()
-
-
-# Initialize Pygame
-pygame.init()
-
-# Set up the screen
-width, height = 2000, 900
-screen = pygame.display.set_mode((width, height))
-pygame.display.set_caption("PyMunk Car Game")
-
-# Create a PyMunk space
-space = pymunk.Space()
-space.gravity = (0, 0)
-
-# Pygame clock
-clock = pygame.time.Clock()
-
-# Create car collision handler
-car_and_static_handler = space.add_collision_handler(1, 0)
-car_and_static_handler.begin = car_and_wall_collision
-
-# Create sensor collision handler
-sensor_handler = space.add_collision_handler(0, 2)
-sensor_handler.begin = Car.sensor_collision_begin
-
+screen, space, clock, width, height = setup_game()
 car = Car(space, width, height)
 track = Track(space, width, height)
+define_collision(space)
 
 # Game loop
 while True:

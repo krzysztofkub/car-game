@@ -2,6 +2,7 @@ import math
 
 import pygame
 import pymunk
+import pymunk.pygame_util
 
 
 class Car:
@@ -19,7 +20,7 @@ class Car:
     @staticmethod
     def create_car_body(position, angle, width, height, collision_type):
         mass = 1
-        moment = pymunk.moment_for_box(mass, (width/40, height/30))
+        moment = pymunk.moment_for_box(mass, (width / 40, height / 30))
         car_body = pymunk.Body(mass, moment)
         car_body.position = position
         car_body.angle = angle
@@ -28,7 +29,7 @@ class Car:
 
     @staticmethod
     def create_car_shape(car_body, width, height):
-        car_shape = pymunk.Poly.create_box(car_body, (width/40, height/30))
+        car_shape = pymunk.Poly.create_box(car_body, (width / 40, height / 30))
         car_shape.friction = 0
         return car_shape
 
@@ -46,11 +47,6 @@ class Car:
         front_sensor_shape.sensor = True
         front_sensor_shape.collision_type = 2
         self.space.add(front_sensor_shape)
-
-    @staticmethod
-    def sensor_collision_begin(arbiter, space, data):
-        print("Sensor detected potential collision")
-        return True  # Returning True continues processing this collision, False would ignore it
 
     def update(self, screen):
         speed = 100
