@@ -2,11 +2,9 @@ import pygame
 
 
 def define_collision(space):
-    # Create car collision handler
     car_and_static_handler = space.add_collision_handler(0, 1)
     car_and_static_handler.begin = car_and_wall_collision
 
-    # Create sensor collision handler
     sensor_handler = space.add_collision_handler(0, 2)
     sensor_handler.pre_solve = sensor_collision_pre_solve
 
@@ -25,7 +23,6 @@ def sensor_collision_pre_solve(arbiter, space, data):
             break
 
     if sensor_shape is not None:
-        # Get the first contact point information
         contact_point = arbiter.contact_point_set.points[
             0].point_a  # point_a or point_b based on the shape order in arbiter.shapes
         sensor_start_pos = sensor_shape.body.position + sensor_shape.a.rotated(sensor_shape.body.angle)
