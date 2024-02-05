@@ -23,8 +23,7 @@ def sensor_collision_pre_solve(arbiter, space, data):
             break
 
     if sensor_shape is not None:
-        contact_point = arbiter.contact_point_set.points[
-            0].point_a  # point_a or point_b based on the shape order in arbiter.shapes
+        contact_point = arbiter.contact_point_set.points[0].point_a
         sensor_start_pos = sensor_shape.body.position + sensor_shape.a.rotated(sensor_shape.body.angle)
         distance = sensor_start_pos.get_distance(contact_point)
         print(f"{sensor_shape.sensor_name} collided with track at distance: {distance}")
