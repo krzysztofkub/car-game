@@ -15,6 +15,8 @@ class Car:
         self.front_sensor_start = pymunk.Vec2d(0, 0)  # Convert to Vec2d
         self.sensor_length = 100  # Length of the sensor lines
         space.add(self.car_body, self.car_shape)
+        self.sensor_shapes = []
+        self.sensors_number = 3
         self.add_sensors()
 
 
@@ -38,18 +40,30 @@ class Car:
 
     def add_sensors(self):
         sensor_length = 100  # Length of the sensor lines
-        sensor_width = 5  # Thickness of the sensors (for visibility, can be 1 for a line)
         offset_distance = 0  # Distance from the center of the car to where the sensors start
+        sensor_width = 5  # Thickness of the sensors
 
-        # Front sensor
-        front_sensor_shape = pymunk.Segment(
-            self.car_body,
-            (-offset_distance, 0),
-            (-offset_distance + sensor_length, 0),
-            sensor_width)
-        front_sensor_shape.sensor = True
-        front_sensor_shape.collision_type = 2
-        self.space.add(front_sensor_shape)
+        # Calculate the angle between each sensor
+        angle_step = 180 / (self.sensors_number - 1) if self.sensors_number > 1 else 0
+
+        for i in range(self.sensors_number):
+            # Calculate the angle for this sensor
+            angle = math.radians(-90 + i * angle_step)  # Convert to radians
+
+            # Calculate the end point of the sensor
+            end_x = math.cos(angle) * sensor_length
+            end_y = math.sin(angle) * sensor_length
+
+            # Create the sensor
+            sensor_shape = pymunk.Segment(
+                self.car_body,
+                (offset_distance, 0),  # Start point relative to the car's body
+                (offset_distance + end_x, end_y),  # End point relative to the car's body
+                sensor_width)
+            sensor_shape.sensor = True
+            sensor_shape.collision_type = 2
+            self.sensor_shapes.append(sensor_shape)
+            self.space.add(sensor_shape)
 
     def update(self, screen):
         speed = 100
@@ -64,13 +78,16 @@ class Car:
             int(rotated_car_image.get_height() * scale_factor)
         ))
         screen.blit(scaled_car_image, self.car_body.position - scaled_car_image.get_rect().center)
-        # Calculate the sensor's absolute start and end points
-        sensor_start_pos = self.car_body.position + self.front_sensor_start.rotated(self.car_body.angle)
-        sensor_end_pos = sensor_start_pos + pymunk.Vec2d(self.sensor_length, 0).rotated(self.car_body.angle)
 
-        # Convert Pymunk positions to Pygame positions
-        sensor_start_pygame = pymunk.pygame_util.to_pygame(sensor_start_pos, screen)
-        sensor_end_pygame = pymunk.pygame_util.to_pygame(sensor_end_pos, screen)
+        # Draw all sensor lines
+        for sensor_shape in self.sensor_shapes:
+            # Calculate the sensor's absolute start and end points
+            sensor_start_pos = self.car_body.position + sensor_shape.a.rotated(self.car_body.angle)
+            sensor_end_pos = self.car_body.position + sensor_shape.b.rotated(self.car_body.angle)
 
-        # Draw the sensor lines
-        pygame.draw.line(screen, (255, 0, 0), sensor_start_pygame, sensor_end_pygame, 2)  # Red sensor lines
+            # Convert Pymunk positions to Pygame positions
+            sensor_start_pygame = pymunk.pygame_util.to_pygame(sensor_start_pos, screen)
+            sensor_end_pygame = pymunk.pygame_util.to_pygame(sensor_end_pos, screen)
+
+            # Draw the sensor lines
+            pygame.draw.line(screen, (255, 0, 0), sensor_start_pygame, sensor_end_pygame, 2)
