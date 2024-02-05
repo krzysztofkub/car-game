@@ -3,15 +3,14 @@ import pymunk
 
 
 class Track:
-    def __init__(self, space, width, height, collision_type=0):
-        self.static_lines = self.create_track(space, width, height, collision_type)
+    def __init__(self, space, width, height):
+        self.collision_type = 0
+        self.static_lines = self.create_track(space, width, height, self.collision_type)
         self.height = height
         self.width = width
-        self.collision_type = collision_type
 
     @staticmethod
     def create_track(space, width, height, collision_type):
-        # Create walls
         static_lines = [
             pymunk.Segment(space.static_body, (50, 50), (50, height - 50), 5),
             pymunk.Segment(space.static_body, (50, height - 50), (width - 50, height - 50), 5),
