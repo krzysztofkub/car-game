@@ -3,7 +3,7 @@ import pymunk
 
 
 class Track:
-    def __init__(self, space, width, height, collision_type=1):
+    def __init__(self, space, width, height, collision_type=0):
         self.static_lines = self.create_track(space, width, height, collision_type)
         self.height = height
         self.width = width

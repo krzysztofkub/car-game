@@ -12,6 +12,9 @@ class Car:
         self.space.add(self.car_body, self.car_shape)
         self.car_image = pygame.image.load("car.png")
         self.collision_type = collision_type
+        self.add_sensors()
+        self.front_sensor_start = pymunk.Vec2d(0, 0)  # Convert to Vec2d
+        self.sensor_length = 100  # Length of the sensor lines
 
     @staticmethod
     def create_car_body(position, angle, width, height, collision_type):
@@ -29,6 +32,26 @@ class Car:
         car_shape.friction = 0
         return car_shape
 
+    def add_sensors(self):
+        sensor_length = 100  # Length of the sensor lines
+        sensor_width = 5  # Thickness of the sensors (for visibility, can be 1 for a line)
+        offset_distance = 0  # Distance from the center of the car to where the sensors start
+
+        # Front sensor
+        front_sensor_shape = pymunk.Segment(
+            self.car_body,
+            (-offset_distance, 0),
+            (-offset_distance + sensor_length, 0),
+            sensor_width)
+        front_sensor_shape.sensor = True
+        front_sensor_shape.collision_type = 2
+        self.space.add(front_sensor_shape)
+
+    @staticmethod
+    def sensor_collision_begin(arbiter, space, data):
+        print("Sensor detected potential collision")
+        return True  # Returning True continues processing this collision, False would ignore it
+
     def update(self, screen):
         speed = 100
         self.car_body.velocity = self.car_body.rotation_vector * speed
@@ -42,3 +65,13 @@ class Car:
             int(rotated_car_image.get_height() * scale_factor)
         ))
         screen.blit(scaled_car_image, self.car_body.position - scaled_car_image.get_rect().center)
+        # Calculate the sensor's absolute start and end points
+        sensor_start_pos = self.car_body.position + self.front_sensor_start.rotated(self.car_body.angle)
+        sensor_end_pos = sensor_start_pos + pymunk.Vec2d(self.sensor_length, 0).rotated(self.car_body.angle)
+
+        # Convert Pymunk positions to Pygame positions
+        sensor_start_pygame = pymunk.pygame_util.to_pygame(sensor_start_pos, screen)
+        sensor_end_pygame = pymunk.pygame_util.to_pygame(sensor_end_pos, screen)
+
+        # Draw the sensor lines
+        pygame.draw.line(screen, (255, 0, 0), sensor_start_pygame, sensor_end_pygame, 2)  # Red sensor lines

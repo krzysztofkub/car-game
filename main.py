@@ -30,9 +30,13 @@ space.gravity = (0, 0)
 # Pygame clock
 clock = pygame.time.Clock()
 
-# Create a collision handler
-car_and_static_handler = space.add_collision_handler(0, 1)
+# Create car collision handler
+car_and_static_handler = space.add_collision_handler(1, 0)
 car_and_static_handler.begin = car_and_wall_collision
+
+# Create sensor collision handler
+sensor_handler = space.add_collision_handler(0, 2)
+sensor_handler.begin = Car.sensor_collision_begin
 
 car = Car(space, width, height)
 track = Track(space, width, height)
