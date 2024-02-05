@@ -2,13 +2,13 @@ import pygame
 from pygame.locals import QUIT
 from car import Car
 from collisions import define_collision
-from game_setup import setup_game
+from game_setup import GameSetup
 from track import Track
 
-screen, space, clock, width, height = setup_game()
-car = Car(space, width, height)
-track = Track(space, width, height)
-define_collision(space)
+game_setup = GameSetup()
+car = Car(game_setup.space, game_setup.width, game_setup.height)
+track = Track(game_setup.space, game_setup.width, game_setup.height)
+define_collision(game_setup.space)
 
 # Game loop
 while True:
@@ -25,14 +25,14 @@ while True:
         car.car_body.angle -= 0.1
 
     # Update physics
-    space.step(1 / 60.0)
+    game_setup.space.step(1 / 60.0)
 
     # Clear the screen
-    screen.fill((255, 255, 255))
+    game_setup.screen.fill((255, 255, 255))
 
-    car.update(screen)
-    track.draw(screen)
+    car.update(game_setup.screen)
+    track.draw(game_setup.screen)
 
     pygame.display.flip()
 
-    clock.tick(60)
+    game_setup.clock.tick(60)

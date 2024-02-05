@@ -39,31 +39,27 @@ class Car:
         return car_shape
 
     def add_sensors(self):
-        sensor_length = 100  # Length of the sensor lines
-        offset_distance = 0  # Distance from the center of the car to where the sensors start
-        sensor_width = 5  # Thickness of the sensors
-
-        # Calculate the angle between each sensor
+        sensor_length = 100
+        sensor_width = 5
+        offset_distance = 0
         angle_step = 180 / (self.sensors_number - 1) if self.sensors_number > 1 else 0
 
         for i in range(self.sensors_number):
-            # Calculate the angle for this sensor
-            angle = math.radians(-90 + i * angle_step)  # Convert to radians
-
-            # Calculate the end point of the sensor
+            angle = math.radians(-90 + i * angle_step)
             end_x = math.cos(angle) * sensor_length
             end_y = math.sin(angle) * sensor_length
 
-            # Create the sensor
+            sensor_name = f"Sensor {i + 1}"
             sensor_shape = pymunk.Segment(
                 self.car_body,
-                (offset_distance, 0),  # Start point relative to the car's body
-                (offset_distance + end_x, end_y),  # End point relative to the car's body
+                (offset_distance, 0),
+                (offset_distance + end_x, end_y),
                 sensor_width)
             sensor_shape.sensor = True
             sensor_shape.collision_type = 2
-            self.sensor_shapes.append(sensor_shape)
+            sensor_shape.sensor_name = sensor_name
             self.space.add(sensor_shape)
+            self.sensor_shapes.append(sensor_shape)
 
     def update(self, screen):
         speed = 100
