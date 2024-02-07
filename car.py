@@ -8,7 +8,7 @@ import constants
 
 
 class Car:
-    def __init__(self, space, width, height, position=(100, 100), angle=0):
+    def __init__(self, space, width, height, position=(300, 300), angle=0):
         self.collision_type = 1
         self.space = space
         self.car_body = self.create_car_body(position, angle, width, height)

@@ -1,5 +1,9 @@
+import random
+
 import pygame
 from pygame.locals import QUIT
+
+import collisions
 from car import Car
 from collisions import define_collision
 from game_setup import GameSetup
@@ -10,6 +14,18 @@ car = Car(game_setup.space, game_setup.width, game_setup.height)
 track = Track(game_setup.space, game_setup.width, game_setup.height)
 define_collision(game_setup.space)
 
+
+def set_car_angle() -> float:
+    sensors = collisions.get_active_sensors()
+    if sensors != {}:
+        temp_angle = car.car_body.angle
+        car.car_body.angle = temp_angle + calculate_move()
+
+
+def calculate_move():
+    return random.uniform(-0.3, 0.3)
+
+
 # Game loop
 while True:
     for event in pygame.event.get():
@@ -17,12 +33,7 @@ while True:
             pygame.quit()
             exit()
 
-    keys = pygame.key.get_pressed()
-
-    if keys[pygame.K_RIGHT]:
-        car.car_body.angle += 0.1
-    if keys[pygame.K_LEFT]:
-        car.car_body.angle -= 0.1
+    set_car_angle()
 
     # Update physics
     game_setup.space.step(1 / 60.0)
