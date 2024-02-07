@@ -1,14 +1,17 @@
 import math
+import random
 
 import pygame
 import pymunk
 import pymunk.pygame_util
 
+import collisions
 import constants
 
 
 class Car:
-    def __init__(self, space, width, height, position=(300, 300), angle=0):
+    def __init__(self, space, width, height, id, position=(300, 300), angle=0):
+        self.id = id
         self.collision_type = 1
         self.space = space
         self.car_body = self.create_car_body(position, angle, width, height)
@@ -17,9 +20,8 @@ class Car:
         self.front_sensor_start = pymunk.Vec2d(0, 0)
         space.add(self.car_body, self.car_shape)
         self.sensor_shapes = []
+        self.sensors = {}
         self.add_sensors()
-
-
 
     @staticmethod
     def create_car_body(position, angle, width, height):
@@ -48,7 +50,7 @@ class Car:
             end_x = math.cos(angle) * constants.SENSOR_LENGTH
             end_y = math.sin(angle) * constants.SENSOR_LENGTH
 
-            sensor_name = f"Sensor {i + 1}"
+            sensor_name = f"Sensor {i + 1}:{self.id}"
             sensor_shape = pymunk.Segment(
                 self.car_body,
                 (offset_distance, 0),
@@ -86,3 +88,29 @@ class Car:
 
                 # Draw the sensor lines
                 pygame.draw.line(screen, (255, 0, 0), sensor_start_pygame, sensor_end_pygame, constants.SENSOR_WIDTH)
+
+    def set_car_angle(self):
+        sensors = self.sensors
+        temp_angle = self.car_body.angle
+        self.car_body.angle = temp_angle + self.calculate_move(sensors)
+
+    def calculate_move(self, sensors):
+        number_of_sensors = len(sensors)
+        if number_of_sensors == 0:
+            return random.uniform(-0.05, 0.05)
+        if number_of_sensors == 1:
+            return random.uniform(-0.1, 0.1)
+        if number_of_sensors == 2:
+            return random.uniform(-0.2, 0.2)
+        if number_of_sensors == 3:
+            return random.uniform(-0.3, 0.3)
+        return 0
+
+    def remove_from_space(self):
+        for sensor in self.sensor_shapes:
+            self.space.remove(sensor)
+        for shape in self.car_body.shapes:
+            self.space.remove(shape)
+
+    def __repr__(self):
+        return f'Car(id={self.id})'

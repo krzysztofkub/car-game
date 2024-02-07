@@ -1,8 +1,7 @@
 import pygame
 
 import constants
-
-sensors = {}
+from cars_cache import remove_car, get_car
 
 
 def define_collision(space):
@@ -10,25 +9,35 @@ def define_collision(space):
     car_and_wall_collision_handler.begin = car_and_wall_collision
 
     sensor_handler = space.add_collision_handler(0, 2)
-    sensor_handler.begin = store_sensor
+    sensor_handler.begin = sensor_begin
     sensor_handler.pre_solve = calculate_sensor_length
-    sensor_handler.separate = remove_sensor
+    sensor_handler.separate = sensor_separate
 
 
 def car_and_wall_collision(arbiter, space, data):
     print("Car collided with static line!")
-    pygame.quit()
-    exit()
+    car_body = None
+    for shape in arbiter.shapes:
+        if shape.collision_type == 1:
+            car_body = shape.body
+    if car_body is not None:
+        remove_car(car_body)
+
+    return True
 
 
-def store_sensor(arbiter, space, data):
+def sensor_begin(arbiter, space, data):
     sensor_shape = None
     for shape in arbiter.shapes:
         if hasattr(shape, "sensor_name"):  # Check if the shape is a sensor
             sensor_shape = shape
             break
     if sensor_shape is not None:
-        sensors[sensor_shape.sensor_name] = constants.SENSOR_LENGTH
+        print(f"{sensor_shape.sensor_name} BEGIN")
+        car = get_car_by_sensor_shape(sensor_shape)
+        if car is not None:
+            car.sensors[sensor_shape.sensor_name] = constants.SENSOR_LENGTH
+    return True
 
 
 def calculate_sensor_length(arbiter, space, data):
@@ -42,22 +51,28 @@ def calculate_sensor_length(arbiter, space, data):
         contact_point = arbiter.contact_point_set.points[0].point_a
         sensor_start_pos = sensor_shape.body.position + sensor_shape.a.rotated(sensor_shape.body.angle)
         distance = sensor_start_pos.get_distance(contact_point)
-        sensors[sensor_shape.sensor_name] = distance
-        print(f"{sensor_shape.sensor_name} collided with track at distance: {distance}")
+        car = get_car_by_sensor_shape(sensor_shape)
+        if car is not None:
+            car.sensors[sensor_shape.sensor_name] = distance
     return True
 
 
-def remove_sensor(arbiter, space, data):
-    sensor_name = None
+def sensor_separate(arbiter, space, data):
+    sensor_shape = None
     for shape in arbiter.shapes:
         if hasattr(shape, "sensor_name"):  # Check if the shape is a sensor
-            sensor_name = shape
+            sensor_shape = shape
             break
 
-    if sensor_name is not None:
-        del sensors[sensor_name.sensor_name]
+    if sensor_shape is not None:
+        print(f"{sensor_shape.sensor_name} FINISH")
+        car = get_car_by_sensor_shape(sensor_shape)
+        if car is not None and sensor_shape.sensor_name in car.sensors:
+            car.sensors.pop(sensor_shape.sensor_name)
+
     return True
 
 
-def get_active_sensors():
-    return sensors
+def get_car_by_sensor_shape(sensor_shape):
+    car_id = int(sensor_shape.sensor_name.split(":")[1])
+    return get_car(car_id)
