@@ -1,20 +1,19 @@
 import pygame
 import pymunk
 
+import constants
 from constants import TRACK_CHOICE
 
 
 class Track:
     def __init__(self, space, width, height):
-        self.collision_type = 0
-        self.new_collision_type = 0
-        self.static_lines = self.create_track(space, width, height, self.collision_type)
-        self.new_static_lines = self.create_checkpoints(space, width, height, self.new_collision_type)
+        self.collision_type = constants.TRACK_COLLISION_TYPE
+        self.static_lines = self.create_track(space, width, height)
+        self.new_static_lines = self.create_checkpoints(space, width, height)
         self.height = height
         self.width = width
 
-    @staticmethod
-    def create_track(space, width, height, collision_type):
+    def create_track(self, space, width, height):
         set_track_width = 200
         track_width = set_track_width + 50
         if TRACK_CHOICE == 1:
@@ -58,13 +57,13 @@ class Track:
         for i, line in enumerate(static_lines):
             line.friction = 0
             line.color = (255, 0, 0)
-            line.collision_type = collision_type
+            line.collision_type = self.collision_type
             space.add(line)
 
         return static_lines
 
     @staticmethod
-    def create_checkpoints(space, width, height, collision_type):
+    def create_checkpoints(space, width, height):
         set_track_width = 200
         track_width = set_track_width + 50
 
@@ -96,7 +95,7 @@ class Track:
         for i, line in enumerate(static_lines):
             line.friction = 0
             line.color = (0, 0, 255)
-            line.collision_type = collision_type
+            line.collision_type = constants.CHECKPOINT_COLLISION_TYPE
             space.add(line)
 
         return static_lines

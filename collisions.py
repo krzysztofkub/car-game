@@ -5,10 +5,13 @@ from cars_cache import remove_car, get_car
 
 
 def define_collision(space):
-    car_and_wall_collision_handler = space.add_collision_handler(0, 1)
+    cars_collision_handler = space.add_collision_handler(constants.CAR_COLLISION_TYPE, constants.CAR_COLLISION_TYPE)
+    cars_collision_handler.begin = lambda arbiter, space, data: False
+
+    car_and_wall_collision_handler = space.add_collision_handler(constants.TRACK_COLLISION_TYPE, constants.CAR_COLLISION_TYPE)
     car_and_wall_collision_handler.begin = car_and_wall_collision
 
-    sensor_handler = space.add_collision_handler(0, 2)
+    sensor_handler = space.add_collision_handler(constants.TRACK_COLLISION_TYPE, constants.SENSOR_COLLISION_TYPE)
     sensor_handler.begin = sensor_begin
     sensor_handler.pre_solve = calculate_sensor_length
     sensor_handler.separate = sensor_separate

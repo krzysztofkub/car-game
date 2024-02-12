@@ -12,7 +12,7 @@ from driving_algorithm import drive
 class Car:
     def __init__(self, space, width, height, id, position=(130, 700), angle=4.71):
         self.id = id
-        self.collision_type = 1
+        self.collision_type = constants.CAR_COLLISION_TYPE
         self.space = space
         self.car_body = self.create_car_body(position, angle, width, height)
         self.car_shape = self.create_car_shape(self.car_body, width, height)
@@ -23,14 +23,13 @@ class Car:
         self.sensors = {}
         self.add_sensors()
 
-    @staticmethod
-    def create_car_body(position, angle, width, height):
+    def create_car_body(self, position, angle, width, height):
         mass = 1
         moment = pymunk.moment_for_box(mass, (width / 40, height / 30))
         car_body = pymunk.Body(mass, moment)
         car_body.position = position
         car_body.angle = angle
-        car_body.collision_type = constants.CAR_COLLISION_TYPE
+        car_body.collision_type = self.collision_type
         return car_body
 
     @staticmethod
