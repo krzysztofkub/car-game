@@ -10,7 +10,7 @@ import constants
 
 
 class Car:
-    def __init__(self, space, width, height, id, position=(300, 300), angle=0):
+    def __init__(self, space, width, height, id, position=(130, 700), angle=4.71):
         self.id = id
         self.collision_type = 1
         self.space = space
