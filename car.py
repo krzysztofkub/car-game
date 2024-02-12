@@ -12,6 +12,7 @@ from driving_algorithm import drive
 class Car:
     def __init__(self, space, width, height, id, position=(130, 700), angle=4.71):
         self.id = id
+        self.is_active = True
         self.collision_type = constants.CAR_COLLISION_TYPE
         self.space = space
         self.car_body = self.create_car_body(position, angle, width, height)
@@ -61,7 +62,7 @@ class Car:
             self.space.add(sensor_shape)
             self.sensor_shapes.append(sensor_shape)
 
-    def update(self, screen):
+    def draw(self, screen):
         self.car_body.velocity = self.car_body.rotation_vector * constants.CAR_SPEED
         self.car_body.angular_velocity = 0
 

@@ -1,3 +1,5 @@
+import random
+
 cars = []
 
 
@@ -6,11 +8,11 @@ def remove_car(car_body):
     if filtered_cars:
         car_to_be_removed = filtered_cars[0]
         car_to_be_removed.remove_from_space()
-        cars.remove(car_to_be_removed)
+        car_to_be_removed.is_active = False
 
 
-def get_cars():
-    return cars
+def get_active_cars():
+    return [car for car in cars if car.is_active]
 
 
 def add_car(car):
@@ -22,3 +24,6 @@ def get_car(car_id):
     if filtered_cars:
         return filtered_cars[0]
 
+
+def get_two_champions():
+    return random.sample(range(len(cars)), 2)
