@@ -5,8 +5,8 @@ import pygame
 import pymunk
 import pymunk.pygame_util
 
-import collisions
 import constants
+from driving_algorithm import drive
 
 
 class Car:
@@ -92,19 +92,7 @@ class Car:
     def set_car_angle(self):
         sensors = self.sensors
         temp_angle = self.car_body.angle
-        self.car_body.angle = temp_angle + self.calculate_move(sensors)
-
-    def calculate_move(self, sensors):
-        number_of_sensors = len(sensors)
-        if number_of_sensors == 0:
-            return random.uniform(-0.05, 0.05)
-        if number_of_sensors == 1:
-            return random.uniform(-0.1, 0.1)
-        if number_of_sensors == 2:
-            return random.uniform(-0.2, 0.2)
-        if number_of_sensors == 3:
-            return random.uniform(-0.3, 0.3)
-        return 0
+        self.car_body.angle = temp_angle + drive(sensors)
 
     def remove_from_space(self):
         for sensor in self.sensor_shapes:
