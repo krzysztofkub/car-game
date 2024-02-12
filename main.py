@@ -12,7 +12,7 @@ game_setup = GameSetup()
 track = Track(game_setup.space, game_setup.width, game_setup.height)
 for car_id in range(0, NUMBER_OF_CARS):
     car = Car(game_setup.space, game_setup.width, game_setup.height, car_id)
-    # add_car(car)
+    add_car(car)
 define_collision(game_setup.space)
 
 # Game loop
