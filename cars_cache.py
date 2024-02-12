@@ -25,5 +25,5 @@ def get_car(car_id):
         return filtered_cars[0]
 
 
-def get_two_champions():
-    return random.sample(range(len(cars)), 2)
+def get_cars():
+    return cars

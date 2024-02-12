@@ -2,7 +2,8 @@ import pygame
 from pygame.locals import QUIT
 
 from car import Car
-from cars_cache import add_car, get_active_cars, get_two_champions
+from cars_cache import add_car, get_active_cars
+from champions_picking_alogrithm import get_two_champions
 from collisions import define_collision
 from constants import NUMBER_OF_CARS
 from game_setup import GameSetup

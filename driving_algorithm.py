@@ -1,6 +1,7 @@
 import random
 
 
+# TODO implement driving alogrithm
 def drive(sensors):
     number_of_sensors = len(sensors)
     if number_of_sensors == 0:

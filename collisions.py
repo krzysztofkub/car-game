@@ -18,7 +18,6 @@ def define_collision(space):
 
 
 def car_and_wall_collision(arbiter, space, data):
-    print("Car collided with static line!")
     car_body = None
     for shape in arbiter.shapes:
         if shape.collision_type == 1:
