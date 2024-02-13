@@ -86,13 +86,11 @@ class Track:
                 # Linia META:
                 pymunk.Segment(space.static_body, (width - 50, 50), (width - 50, 300), 5),
 
-                # Checkpoints gorne
-
-                pymunk.Segment(space.static_body, (200, height - 50), (200, height - 200), 5),
-                pymunk.Segment(space.static_body, (200, height - 200), (50, height - 50), 5),
-                pymunk.Segment(space.static_body, (200, height - 200), (50, height - 200), 5),
-                pymunk.Segment(space.static_body, (200, height - 200), (400, height - 200), 5),
-                pymunk.Segment(space.static_body, (200, height - 200), (400, height - 50), 5),
+                # pymunk.Segment(space.static_body, (200, height - 50), (200, height - 200), 5),
+                # pymunk.Segment(space.static_body, (200, height - 200), (50, height - 50), 5),
+                # pymunk.Segment(space.static_body, (200, height - 200), (50, height - 200), 5),
+                # pymunk.Segment(space.static_body, (200, height - 200), (400, height - 200), 5),
+                # pymunk.Segment(space.static_body, (200, height - 200), (400, height - 50), 5),
 
                 pymunk.Segment(space.static_body, (400,200), (200, 200), 5),
                 pymunk.Segment(space.static_body, (400, 200), (200, 50), 5),
