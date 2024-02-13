@@ -22,6 +22,7 @@ class Car:
         space.add(self.car_body, self.car_shape)
         self.sensor_shapes = []
         self.sensors = {}
+        self.checkpoints_crossed_number = 0
         self.add_sensors()
 
     def create_car_body(self, position, angle, width, height):
