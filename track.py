@@ -147,6 +147,7 @@ class Track:
             line.friction = 0
             line.color = (0, 0, 255)
             line.collision_type = constants.CHECKPOINT_COLLISION_TYPE
+            line.checkpoint_id = i
             space.add(line)
 
         return static_lines

@@ -8,13 +8,36 @@ def define_collision(space):
     cars_collision_handler = space.add_collision_handler(constants.CAR_COLLISION_TYPE, constants.CAR_COLLISION_TYPE)
     cars_collision_handler.begin = lambda arbiter, space, data: False
 
-    car_and_wall_collision_handler = space.add_collision_handler(constants.TRACK_COLLISION_TYPE, constants.CAR_COLLISION_TYPE)
+    car_and_wall_collision_handler = space.add_collision_handler(constants.TRACK_COLLISION_TYPE,
+                                                                 constants.CAR_COLLISION_TYPE)
     car_and_wall_collision_handler.begin = car_and_wall_collision
+
+    car_and_checkpoint_collision_handler = space.add_collision_handler(constants.CHECKPOINT_COLLISION_TYPE,
+                                                                       constants.CAR_COLLISION_TYPE)
+    car_and_checkpoint_collision_handler.begin = car_and_checkpoint_collision
 
     sensor_handler = space.add_collision_handler(constants.TRACK_COLLISION_TYPE, constants.SENSOR_COLLISION_TYPE)
     sensor_handler.begin = sensor_begin
     sensor_handler.pre_solve = calculate_sensor_length
     sensor_handler.separate = sensor_separate
+
+
+def car_and_checkpoint_collision(arbiter, space, data):
+    car_shape = None
+    checkpoint_shape = None
+    for shape in arbiter.shapes:
+        if hasattr(shape, "car_id"):
+            car_shape = shape
+        if hasattr(shape, "checkpoint_id"):
+            checkpoint_shape = shape
+
+    if car_shape is not None and checkpoint_shape is not None:
+        car_id = int(car_shape.car_id)
+        car = get_car(car_id)
+        car.crossed_checkpoints.add(checkpoint_shape.checkpoint_id)
+        print(car.crossed_checkpoints)
+
+    return False
 
 
 def car_and_wall_collision(arbiter, space, data):
