@@ -86,10 +86,62 @@ class Track:
                 # Linia META:
                 pymunk.Segment(space.static_body, (width - 50, 50), (width - 50, 300), 5),
 
-                # Checkpoints
+                # Checkpoints gorne
+
+                pymunk.Segment(space.static_body, (200, height - 50), (200, height - 200), 5),
+                pymunk.Segment(space.static_body, (200, height - 200), (50, height - 50), 5),
+                pymunk.Segment(space.static_body, (200, height - 200), (50, height - 200), 5),
+                pymunk.Segment(space.static_body, (200, height - 200), (400, height - 200), 5),
+                pymunk.Segment(space.static_body, (200, height - 200), (400, height - 50), 5),
+
+                pymunk.Segment(space.static_body, (400,200), (200, 200), 5),
+                pymunk.Segment(space.static_body, (400, 200), (200, 50), 5),
+                pymunk.Segment(space.static_body, (400, 200), (400, 50), 5),
+                pymunk.Segment(space.static_body, (400, 200), (600, 50), 5),
+                pymunk.Segment(space.static_body, (400, 200), (600, 200), 5),
+
                 pymunk.Segment(space.static_body, (600, height - 50), (600, height - 200), 5),
+                pymunk.Segment(space.static_body, (600, height - 200), (400, height - 50), 5),
+                pymunk.Segment(space.static_body, (600, height - 200), (400, height - 200), 5),
+                pymunk.Segment(space.static_body, (600, height - 200), (800, height - 50), 5),
+                pymunk.Segment(space.static_body, (600, height - 200), (800, height - 200), 5),
+
+                pymunk.Segment(space.static_body, (800, 200), (600, 200), 5),
+                pymunk.Segment(space.static_body, (800, 200), (600, 50), 5),
+                pymunk.Segment(space.static_body, (800, 200), (800, 50), 5),
+                pymunk.Segment(space.static_body, (800, 200), (1000, 50), 5),
+                pymunk.Segment(space.static_body, (800, 200), (1000, 200), 5),
+
                 pymunk.Segment(space.static_body, (1000, height - 50), (1000, height - 200), 5),
+                pymunk.Segment(space.static_body, (1000, height - 200), (800, height - 50), 5),
+                pymunk.Segment(space.static_body, (1000, height - 200), (800, height - 200), 5),
+                pymunk.Segment(space.static_body, (1000, height - 200), (1200, height - 50), 5),
+                pymunk.Segment(space.static_body, (1000, height - 200), (1200, height - 200), 5),
+
+                pymunk.Segment(space.static_body, (1200, 200), (1000, 200), 5),
+                pymunk.Segment(space.static_body, (1200, 200), (1000, 50), 5),
+                pymunk.Segment(space.static_body, (1200, 200), (1200, 50), 5),
+                pymunk.Segment(space.static_body, (1200, 200), (1400, 50), 5),
+                pymunk.Segment(space.static_body, (1200, 200), (1400, 200), 5),
+
                 pymunk.Segment(space.static_body, (1400, height - 50), (1400, height - 200), 5),
+                pymunk.Segment(space.static_body, (1400, height - 200), (1200, height - 50), 5),
+                pymunk.Segment(space.static_body, (1400, height - 200), (1200, height - 200), 5),
+                pymunk.Segment(space.static_body, (1400, height - 200), (1600, height - 50), 5),
+                pymunk.Segment(space.static_body, (1400, height - 200), (1600, height - 200), 5),
+
+                pymunk.Segment(space.static_body, (1600, 200), (1400, 200), 5),
+                pymunk.Segment(space.static_body, (1600, 200), (1400, 50), 5),
+                pymunk.Segment(space.static_body, (1600, 200), (1600, 50), 5),
+                pymunk.Segment(space.static_body, (1600, 200), (1800, 50), 5),
+                pymunk.Segment(space.static_body, (1600, 200), (1800, 200), 5),
+
+                pymunk.Segment(space.static_body, (1800, height - 50), (1800, height - 200), 5),
+                pymunk.Segment(space.static_body, (1800, height - 200), (1600, height - 50), 5),
+                pymunk.Segment(space.static_body, (1800, height - 200), (1600, height - 200), 5),
+                pymunk.Segment(space.static_body, (1800, height - 200), (1950, height - 50), 5),
+                pymunk.Segment(space.static_body, (1800, height - 200), (1950, height - 200), 5),
+
             ]
 
         for i, line in enumerate(static_lines):
