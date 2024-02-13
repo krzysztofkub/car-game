@@ -1,5 +1,4 @@
 import math
-import random
 
 import pygame
 import pymunk
@@ -10,7 +9,7 @@ from driving_algorithm import drive
 
 
 class Car:
-    def __init__(self, space, width, height, id, position=(130, 700), angle=4.71):
+    def __init__(self, space, width, height, id, position=(130, 100), angle=1.51):
         self.id = id
         self.is_active = True
         self.collision_type = constants.CAR_COLLISION_TYPE
