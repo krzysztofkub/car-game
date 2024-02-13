@@ -1,5 +1,4 @@
 import math
-import random
 
 import pygame
 import pymunk
@@ -10,7 +9,7 @@ from driving_algorithm import drive
 
 
 class Car:
-    def __init__(self, space, width, height, id, position=(130, 700), angle=4.71):
+    def __init__(self, space, width, height, id, position=(130, 100), angle=1.51):
         self.id = id
         self.is_active = True
         self.collision_type = constants.CAR_COLLISION_TYPE
@@ -22,6 +21,7 @@ class Car:
         space.add(self.car_body, self.car_shape)
         self.sensor_shapes = []
         self.sensors = {}
+        self.crossed_checkpoints = set()
         self.add_sensors()
 
     def create_car_body(self, position, angle, width, height):
@@ -33,11 +33,11 @@ class Car:
         car_body.collision_type = self.collision_type
         return car_body
 
-    @staticmethod
-    def create_car_shape(car_body, width, height):
+    def create_car_shape(self, car_body, width, height):
         car_shape = pymunk.Poly.create_box(car_body, (width / 40, height / 30))
         car_shape.friction = 0
         car_shape.collision_type = constants.CAR_COLLISION_TYPE
+        car_shape.car_id = self.id
         return car_shape
 
     def add_sensors(self):

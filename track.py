@@ -1,5 +1,6 @@
 import pygame
 import pymunk
+from pymunk import pygame_util
 
 import constants
 from constants import TRACK_CHOICE
@@ -9,7 +10,7 @@ class Track:
     def __init__(self, space, width, height):
         self.collision_type = constants.TRACK_COLLISION_TYPE
         self.static_lines = self.create_track(space, width, height)
-        self.new_static_lines = self.create_checkpoints(space, width, height)
+        self.checkpoints = self.create_checkpoints(space, width, height)
         self.height = height
         self.width = width
 
@@ -86,15 +87,13 @@ class Track:
                 # Linia META:
                 pymunk.Segment(space.static_body, (width - 50, 50), (width - 50, 300), 5),
 
-                # Checkpoints gorne
-
                 pymunk.Segment(space.static_body, (200, height - 50), (200, height - 200), 5),
                 pymunk.Segment(space.static_body, (200, height - 200), (50, height - 50), 5),
-                pymunk.Segment(space.static_body, (200, height - 200), (50, height - 200), 5),
+                # pymunk.Segment(space.static_body, (200, height - 200), (50, height - 200), 5),
                 pymunk.Segment(space.static_body, (200, height - 200), (400, height - 200), 5),
                 pymunk.Segment(space.static_body, (200, height - 200), (400, height - 50), 5),
 
-                pymunk.Segment(space.static_body, (400,200), (200, 200), 5),
+                pymunk.Segment(space.static_body, (400, 200), (200, 200), 5),
                 pymunk.Segment(space.static_body, (400, 200), (200, 50), 5),
                 pymunk.Segment(space.static_body, (400, 200), (400, 50), 5),
                 pymunk.Segment(space.static_body, (400, 200), (600, 50), 5),
@@ -148,25 +147,23 @@ class Track:
             line.friction = 0
             line.color = (0, 0, 255)
             line.collision_type = constants.CHECKPOINT_COLLISION_TYPE
+            line.checkpoint_id = i
             space.add(line)
 
         return static_lines
-
-    def to_pygame(self, p):
-        return int(p.x), int(-p.y) + self.height
 
     def draw(self, screen):
         for line in self.static_lines:
             body = line.body
             pv1 = body.position + line.a.rotated(body.angle)
             pv2 = body.position + line.b.rotated(body.angle)
-            p1 = self.to_pygame(pv1)
-            p2 = self.to_pygame(pv2)
+            p1 = pygame_util.to_pygame(pv1, screen)
+            p2 = pygame_util.to_pygame(pv2, screen)
             pygame.draw.lines(screen, line.color, False, [p1, p2])
-        for line in self.new_static_lines:
+        for line in self.checkpoints:
             body = line.body
             pv1 = body.position + line.a.rotated(body.angle)
             pv2 = body.position + line.b.rotated(body.angle)
-            p1 = self.to_pygame(pv1)
-            p2 = self.to_pygame(pv2)
+            p1 = pygame_util.to_pygame(pv1, screen)
+            p2 = pygame_util.to_pygame(pv2, screen)
             pygame.draw.lines(screen, line.color, False, [p1, p2])
