@@ -26,7 +26,7 @@ class Car:
 
     def create_car_body(self, position, angle, width, height):
         mass = 1
-        moment = pymunk.moment_for_box(mass, (width / 40, height / 30))
+        moment = pymunk.moment_for_box(mass, (width / 45, height / 35))
         car_body = pymunk.Body(mass, moment)
         car_body.position = position
         car_body.angle = angle
@@ -34,7 +34,7 @@ class Car:
         return car_body
 
     def create_car_shape(self, car_body, width, height):
-        car_shape = pymunk.Poly.create_box(car_body, (width / 40, height / 30))
+        car_shape = pymunk.Poly.create_box(car_body, (width / 45, height / 35))
         car_shape.friction = 0
         car_shape.collision_type = constants.CAR_COLLISION_TYPE
         car_shape.car_id = self.id
