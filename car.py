@@ -9,13 +9,16 @@ from driving_algorithm import drive
 
 
 class Car:
+
     def __init__(self, space, width, height, id, position=(130, 100), angle=1.51):
         self.id = id
         self.is_active = True
         self.collision_type = constants.CAR_COLLISION_TYPE
         self.space = space
-        self.car_body = self.create_car_body(position, angle, width, height)
-        self.car_shape = self.create_car_shape(self.car_body, width, height)
+        self.screen_width = width
+        self.screen_height = height
+        self.car_body = self.create_car_body(position, angle)
+        self.car_shape = self.create_car_shape(self.car_body)
         self.car_image = pygame.image.load("car.png")
         self.front_sensor_start = pymunk.Vec2d(0, 0)
         space.add(self.car_body, self.car_shape)
@@ -24,17 +27,21 @@ class Car:
         self.crossed_checkpoints = set()
         self.add_sensors()
 
-    def create_car_body(self, position, angle, width, height):
+    @classmethod
+    def from_parents(cls, a, b, id):
+        return cls(a.space, a.screen_width, a.screen_height, id, (130, 100), 1.51)
+
+    def create_car_body(self, position, angle):
         mass = 1
-        moment = pymunk.moment_for_box(mass, (width / 45, height / 35))
+        moment = pymunk.moment_for_box(mass, (self.screen_width / 45, self.screen_height / 35))
         car_body = pymunk.Body(mass, moment)
         car_body.position = position
         car_body.angle = angle
         car_body.collision_type = self.collision_type
         return car_body
 
-    def create_car_shape(self, car_body, width, height):
-        car_shape = pymunk.Poly.create_box(car_body, (width / 45, height / 35))
+    def create_car_shape(self, car_body):
+        car_shape = pymunk.Poly.create_box(car_body, (self.screen_width / 45, self.screen_height / 35))
         car_shape.friction = 0
         car_shape.collision_type = constants.CAR_COLLISION_TYPE
         car_shape.car_id = self.id

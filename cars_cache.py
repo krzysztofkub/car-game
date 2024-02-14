@@ -1,6 +1,5 @@
-import random
-
 cars = []
+cars_generation = 0
 
 
 def remove_car(car_body):
@@ -27,3 +26,10 @@ def get_car(car_id):
 
 def get_cars():
     return cars
+
+
+def update_cars(new_cars):
+    global cars, cars_generation
+    cars_generation += 1
+    cars = new_cars
+    print(f'New generation: {cars_generation}')

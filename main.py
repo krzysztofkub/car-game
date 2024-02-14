@@ -1,9 +1,9 @@
 import pygame
 from pygame.locals import QUIT
 
+import children_generator
 from car import Car
 from cars_cache import add_car, get_active_cars
-from champions_picking_alogrithm import get_two_champions
 from collisions import define_collision
 from constants import NUMBER_OF_CARS
 from game_setup import GameSetup
@@ -23,19 +23,14 @@ while True:
             pygame.quit()
             exit()
 
-    # Check for finished simulation
-    active_cars = get_active_cars()
-    if not active_cars:
-        parents = get_two_champions()
-        print(f'Najlepsze samochody to: {parents}')
-        break
+    children_generator.generate_children_if_needed()
 
     # Update physics
     game_setup.space.step(1 / 60.0)
     # Clear the screen
     game_setup.screen.fill((255, 255, 255))
 
-    for car in active_cars:
+    for car in get_active_cars():
         car.set_car_angle()
         car.draw(game_setup.screen)
 

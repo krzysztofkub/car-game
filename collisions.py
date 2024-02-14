@@ -1,7 +1,7 @@
 import pygame
 
 import constants
-from cars_cache import remove_car, get_car
+from cars_cache import remove_car, get_car, get_cars
 
 
 def define_collision(space):
