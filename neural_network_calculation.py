@@ -4,11 +4,7 @@ class Neuron:
 
     def calculate_output(self, inputs):
         weighted_sum = sum(w * i for w, i in zip(self.weights, inputs))
-        return self.relu(weighted_sum)
-
-    @staticmethod
-    def relu(x):
-        return max(0, x)
+        return weighted_sum
 
 
 class Layer:
@@ -22,8 +18,20 @@ class Layer:
 class NeuralNetwork:
     def __init__(self, sensors, network_hidden_layers, weights):
         self.sensors = sensors
-        # Ensure the last layer is always a single-neuron layer for output
+        self.network_layers = []
+        if not self.validate_weights(network_hidden_layers, weights):
+            raise ValueError("Invalid length of weights array.")
         self.network_layers = self.create_network(network_hidden_layers + [1], weights)
+
+    def validate_weights(self, network_hidden_layers, weights):
+        total_weights_needed = 0
+        input_size = len(self.sensors)
+
+        for layer_size in network_hidden_layers + [1]:
+            total_weights_needed += layer_size * input_size
+            input_size = layer_size
+
+        return total_weights_needed == len(weights)
 
     def create_network(self, network_hidden_layers, weights):
         network = []
@@ -48,10 +56,5 @@ class NeuralNetwork:
         return outputs
 
 
-sensors = [54, 23, 31]
-network_hidden_layers = [2, 3]
-weights = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
-
-nn = NeuralNetwork(sensors, network_hidden_layers, weights)
-output = nn.calculate()
-print(output)
+nn = NeuralNetwork([0.5, 0.3, 0.7], [2, 2], [0.1, -0.2, 0.4, 0.6, -0.5, 0.9, 0.8, 0.7, -0.9, 0.3, -0.4, 0.2])
+print(nn.calculate())
