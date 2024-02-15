@@ -1,0 +1,56 @@
+[
+  {
+    "neurons": [
+      {
+        "id": 0,
+        "neuron_connections": []
+      },
+      {
+        "id": 1,
+        "neuron_connections": []
+      },
+      {
+        "id": 2,
+        "neuron_connections": []
+      }
+    ]
+  },
+  {
+    "neurons": [
+      {
+        "id": 0,
+        "neuron_connections": [
+          {
+            "neuron": 0,
+            "weight": 5
+          },
+          {
+            "neuron": 1,
+            "weight": 5
+          },
+          {
+            "neuron": 2,
+            "weight": 5
+          }
+        ]
+      },
+      {
+        "id": 1,
+        "neuron_connections": [
+          {
+            "neuron": 0,
+            "weight": 5
+          },
+          {
+            "neuron": 1,
+            "weight": 5
+          },
+          {
+            "neuron": 2,
+            "weight": 5
+          }
+        ]
+      }
+    ]
+  }
+]
