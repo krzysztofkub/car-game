@@ -58,7 +58,6 @@ def sensor_begin(arbiter, space, data):
             sensor_shape = shape
             break
     if sensor_shape is not None:
-        print(f"{sensor_shape.sensor_name} BEGIN")
         car = get_car_by_sensor_shape(sensor_shape)
         if car is not None:
             car.sensors[sensor_shape.sensor_name] = constants.SENSOR_LENGTH
@@ -90,7 +89,6 @@ def sensor_separate(arbiter, space, data):
             break
 
     if sensor_shape is not None:
-        print(f"{sensor_shape.sensor_name} FINISH")
         car = get_car_by_sensor_shape(sensor_shape)
         if car is not None and sensor_shape.sensor_name in car.sensors:
             car.sensors.pop(sensor_shape.sensor_name)

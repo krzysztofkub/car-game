@@ -15,7 +15,10 @@ def drive(sensors, car):
 
 
 def auto_drive(sensors, car):
-    nn = NeuralNetwork(sensors, constants.NETWORK_HIDDEN_LAYERS, car.weights)
+    try :
+        nn = NeuralNetwork(sensors, constants.NETWORK_HIDDEN_LAYERS, car.weights)
+    except AttributeError as error:
+        print(error)
     return nn.calculate()[0]
 
 

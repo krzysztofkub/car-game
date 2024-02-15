@@ -11,7 +11,7 @@ from driving_algorithm import drive
 
 class Car:
 
-    def __init__(self, space, width, height, id, position=(130, 100), angle=1.51):
+    def __init__(self, space, width, height, id, position=(130, 100), angle=1.51, weights=[]):
         self.id = id
         self.is_active = True
         self.collision_type = constants.CAR_COLLISION_TYPE
@@ -27,11 +27,15 @@ class Car:
         self.sensors = {}
         self.crossed_checkpoints = set()
         self.add_sensors()
-        self.weights = self.generate_weights()
+        if not weights:
+            self.weights = self.generate_weights()
+        else:
+            self.weights = weights
 
     @classmethod
     def from_parents(cls, a, b, id):
-        return cls(a.space, a.screen_width, a.screen_height, id, (130, 100), 1.51)
+        crossover_weights = cls.crossover_weights(a.weights, b.weights)
+        return cls(a.space, a.screen_width, a.screen_height, id, (130, 100), 1.51, weights=crossover_weights)
 
     def create_car_body(self, position, angle):
         mass = 1
@@ -130,3 +134,8 @@ class Car:
 
     def __repr__(self):
         return f'Car(id={self.id})'
+
+    @classmethod
+    def crossover_weights(cls, a_weights, b_weights):
+        assert len(a_weights) == len(b_weights), "Arrays must have the same length"
+        return [random.choice([a_weights[i], b_weights[i]]) for i in range(len(a_weights))]
