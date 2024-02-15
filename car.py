@@ -69,8 +69,8 @@ class Car:
             self.space.add(sensor_shape)
             self.sensor_shapes.append(sensor_shape)
 
-    def draw(self, screen):
-        self.car_body.velocity = self.car_body.rotation_vector * constants.CAR_SPEED
+    def draw(self, screen, car_speed):
+        self.car_body.velocity = self.car_body.rotation_vector * car_speed
         self.car_body.angular_velocity = 0
 
         # Draw car image
