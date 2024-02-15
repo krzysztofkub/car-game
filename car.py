@@ -1,4 +1,5 @@
 import math
+import random
 
 import pygame
 import pymunk
@@ -26,6 +27,7 @@ class Car:
         self.sensors = {}
         self.crossed_checkpoints = set()
         self.add_sensors()
+        self.weights = self.generate_weights()
 
     @classmethod
     def from_parents(cls, a, b, id):
@@ -96,16 +98,35 @@ class Car:
                 # Draw the sensor lines
                 pygame.draw.line(screen, (255, 0, 0), sensor_start_pygame, sensor_end_pygame, constants.SENSOR_WIDTH)
 
+    def get_sensors_lengths_for_calculation(self):
+        sensors_values = [sensor / 1000 for sensor in list(self.sensors.values())]
+        while len(sensors_values) < constants.SENSORS_NUMBER:
+            sensors_values.append(0)
+        return sensors_values
+
     def set_car_angle(self):
-        sensors = self.sensors
+        sensors = self.get_sensors_lengths_for_calculation()
         temp_angle = self.car_body.angle
-        self.car_body.angle = temp_angle + drive(sensors)
+        self.car_body.angle = temp_angle + drive(sensors, self)
 
     def remove_from_space(self):
         for sensor in self.sensor_shapes:
             self.space.remove(sensor)
         for shape in self.car_body.shapes:
             self.space.remove(shape)
+
+    @staticmethod
+    def generate_weights():
+        total_weights_needed = 0
+        input_size = constants.SENSORS_NUMBER
+
+        # Calculate the total number of weights needed
+        for layer_size in constants.NETWORK_HIDDEN_LAYERS + [1]:
+            total_weights_needed += layer_size * input_size
+            input_size = layer_size
+
+        # Generate the weights
+        return [random.uniform(-1, 1) for _ in range(total_weights_needed)]
 
     def __repr__(self):
         return f'Car(id={self.id})'

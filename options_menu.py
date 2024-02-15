@@ -24,7 +24,7 @@ class OptionsMenu:
             self.draw_option_menu()
 
     def draw_option_menu(self):
-        self.overlay.fill((0, 0, 0, 128))  # Semi-transparent black
+        self.overlay.fill((0, 0, 0, 128))
         self.game_setup.screen.blit(self.overlay, (0, 0))
         font = pygame.font.Font(None, 36)
         text = font.render(f'Generation number: {cars_cache.cars_generation}', True, (255, 255, 255))

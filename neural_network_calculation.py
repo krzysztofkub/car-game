@@ -16,6 +16,9 @@ class Layer:
 
 
 class NeuralNetwork:
+    """
+    Simple linear neural network
+    """
     def __init__(self, sensors, network_hidden_layers, weights):
         self.sensors = sensors
         self.network_layers = []
@@ -54,7 +57,3 @@ class NeuralNetwork:
             outputs = layer.forward(inputs)
             inputs = outputs
         return outputs
-
-
-nn = NeuralNetwork([0.5, 0.3, 0.7], [2, 2], [0.1, -0.2, 0.4, 0.6, -0.5, 0.9, 0.8, 0.7, -0.9, 0.3, -0.4, 0.2])
-print(nn.calculate())
