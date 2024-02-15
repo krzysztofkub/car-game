@@ -1,3 +1,5 @@
+import time
+
 import pygame
 
 import constants
@@ -34,8 +36,9 @@ def car_and_checkpoint_collision(arbiter, space, data):
     if car_shape is not None and checkpoint_shape is not None:
         car_id = int(car_shape.car_id)
         car = get_car(car_id)
-        car.crossed_checkpoints.add(checkpoint_shape.checkpoint_id)
-        print(car.crossed_checkpoints)
+        if checkpoint_shape.checkpoint_id not in car.crossed_checkpoints:
+            car.crossed_checkpoints.add(checkpoint_shape.checkpoint_id)
+            car.last_time_crossed_checkpoint = time.time()
 
     return False
 

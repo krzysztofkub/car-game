@@ -1,5 +1,6 @@
 import math
 import random
+import time
 
 import pygame
 import pymunk
@@ -26,6 +27,7 @@ class Car:
         self.sensor_shapes = []
         self.sensors = {}
         self.crossed_checkpoints = set()
+        self.last_time_crossed_checkpoint = time.time()
         self.add_sensors()
         if not weights:
             self.weights = self.generate_weights()
@@ -105,13 +107,16 @@ class Car:
     def get_sensors_lengths_for_calculation(self):
         sensors_values = [sensor / 1000 for sensor in list(self.sensors.values())]
         while len(sensors_values) < constants.SENSORS_NUMBER:
-            sensors_values.append(0)
+            sensors_values.append(constants.SENSOR_LENGTH * 3)
         return sensors_values
 
     def set_car_angle(self):
-        sensors = self.get_sensors_lengths_for_calculation()
-        temp_angle = self.car_body.angle
-        self.car_body.angle = temp_angle + drive(sensors, self)
+        if time.time() - self.last_time_crossed_checkpoint > constants.WAIT_SECONDS_FOR_NO_CHECKPOINT:
+            self.is_active = False
+        else:
+            sensors = self.get_sensors_lengths_for_calculation()
+            temp_angle = self.car_body.angle
+            self.car_body.angle = temp_angle + drive(sensors, self)
 
     def remove_from_space(self):
         for sensor in self.sensor_shapes:
