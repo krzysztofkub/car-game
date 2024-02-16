@@ -41,10 +41,13 @@ while True:
 
     children_generator.generate_children_if_needed()
 
-    game_setup.space.step(1 / 60.0)
+    game_setup.space.step(1 / constants.FPS)
     game_setup.screen.fill((255, 255, 255))
 
     kill_generation_button.draw(game_setup.screen, pygame.font.Font(None, 18))
+    text = pygame.font.Font(None, 20).render(f'Generation number: {cars_cache.cars_generation}', True, (73, 73, 73))
+    text_rect = text.get_rect(center=(300, 10))
+    game_setup.screen.blit(text, text_rect)
 
     for car in get_active_cars():
         if not options_menu.is_active:
@@ -60,4 +63,4 @@ while True:
 
     pygame.display.flip()
 
-    game_setup.clock.tick(60)
+    game_setup.clock.tick(constants.FPS)
