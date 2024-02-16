@@ -12,7 +12,7 @@ from driving_algorithm import drive
 
 class Car:
 
-    def __init__(self, space, width, height, id, position=(130, 100), angle=1.51, weights=[]):
+    def __init__(self, space, width, height, id, position=constants.STARTING_POSITION, angle=constants.STARTING_ANGLE):
         self.id = id
         self.is_active = True
         self.collision_type = constants.CAR_COLLISION_TYPE
@@ -29,15 +29,7 @@ class Car:
         self.crossed_checkpoints = set()
         self.last_time_crossed_checkpoint = time.time()
         self.add_sensors()
-        if not weights:
-            self.weights = self.generate_weights()
-        else:
-            self.weights = weights
-
-    @classmethod
-    def from_parents(cls, a, b, id):
-        crossover_weights = cls.crossover_weights(a.weights, b.weights)
-        return cls(a.space, a.screen_width, a.screen_height, id, (130, 100), 1.51, weights=crossover_weights)
+        self.weights = self.generate_weights()
 
     def create_car_body(self, position, angle):
         mass = 1
@@ -46,6 +38,7 @@ class Car:
         car_body.position = position
         car_body.angle = angle
         car_body.collision_type = self.collision_type
+        car_body.car_id = self.id
         return car_body
 
     def create_car_shape(self, car_body):
@@ -107,7 +100,7 @@ class Car:
     def get_sensors_lengths_for_calculation(self):
         sensors_values = [sensor / 1000 for sensor in list(self.sensors.values())]
         while len(sensors_values) < constants.SENSORS_NUMBER:
-            sensors_values.append(constants.SENSOR_LENGTH * 3)
+            sensors_values.append(constants.SENSOR_LENGTH * 3/1000)
         return sensors_values
 
     def set_car_angle(self):
@@ -117,12 +110,6 @@ class Car:
             sensors = self.get_sensors_lengths_for_calculation()
             temp_angle = self.car_body.angle
             self.car_body.angle = temp_angle + drive(sensors, self)
-
-    def remove_from_space(self):
-        for sensor in self.sensor_shapes:
-            self.space.remove(sensor)
-        for shape in self.car_body.shapes:
-            self.space.remove(shape)
 
     @staticmethod
     def generate_weights():
@@ -139,8 +126,3 @@ class Car:
 
     def __repr__(self):
         return f'Car(id={self.id})'
-
-    @classmethod
-    def crossover_weights(cls, a_weights, b_weights):
-        assert len(a_weights) == len(b_weights), "Arrays must have the same length"
-        return [random.choice([a_weights[i], b_weights[i]]) for i in range(len(a_weights))]

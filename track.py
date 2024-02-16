@@ -7,6 +7,8 @@ from constants import TRACK_CHOICE
 
 
 class Track:
+    checkpoints_number = 0
+
     def __init__(self, space, width, height):
         self.collision_type = constants.TRACK_COLLISION_TYPE
         self.static_lines = self.create_track(space, width, height)
@@ -84,7 +86,6 @@ class Track:
             static_lines = [
 
                 # TRACK 2
-                # FINISH LINE:
                 pymunk.Segment(space.static_body, (width - 50, 50), (width - 50, 300), 5),
 
                 pymunk.Segment(space.static_body, (200, height - 50), (200, height - 200), 5),
@@ -201,7 +202,12 @@ class Track:
             line.checkpoint_id = i
             space.add(line)
 
+        Track.checkpoints_number = len(static_lines)
         return static_lines
+
+    @staticmethod
+    def get_checkpoints_number():
+        return Track.checkpoints_number
 
     def draw(self, screen):
         for line in self.static_lines:

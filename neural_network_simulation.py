@@ -57,7 +57,8 @@ def draw_neural_network(nn, mouse_pos):
 
 
 # Create NeuralNetwork instance (example initialization)
-nn = NeuralNetwork([0.5, -0.3, 0.7], [2, 2], [0.1, -0.2, 0.4, 0.6, -0.5, 0.9, 0.8, 0.7, -0.9, 0.3, -0.4, 0.2])
+nn = NeuralNetwork([0.5, -0.3, 0.7], [4, 4, 4, 4], [0.1, -0.2, 0.4, 0.6, -0.5, 0.9, 0.8, 0.7, -0.9, 0.3, -0.4, 0.2])
+print(nn.calculate())
 
 # Pygame loop
 running = True

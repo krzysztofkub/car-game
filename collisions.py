@@ -1,9 +1,9 @@
 import time
 
 import pygame
-
+import pymunk
 import constants
-from cars_cache import remove_car, get_car, get_cars
+from cars_cache import deactivate_car, get_car
 
 
 def define_collision(space):
@@ -49,7 +49,7 @@ def car_and_wall_collision(arbiter, space, data):
         if shape.collision_type == 1:
             car_body = shape.body
     if car_body is not None:
-        remove_car(car_body)
+        deactivate_car(car_body)
 
     return True
 
