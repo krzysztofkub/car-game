@@ -12,7 +12,7 @@ from driving_algorithm import drive
 
 class Car:
 
-    def __init__(self, space, width, height, id, position=constants.STARTING_POSITION, angle=constants.STARTING_ANGLE):
+    def __init__(self, space, width, height, id, weights, position=constants.STARTING_POSITION, angle=constants.STARTING_ANGLE):
         self.id = id
         self.is_active = True
         self.collision_type = constants.CAR_COLLISION_TYPE
@@ -27,13 +27,15 @@ class Car:
         self.sensor_shapes = []
         self.sensors = {}
         self.crossed_checkpoints = set()
-        self.last_time_crossed_checkpoint = time.time()
+        self.last_time_crossed_checkpoint = None
+        self.spawn_time = time.time()
+        self.finish_time = None
         self.add_sensors()
-        self.weights = self.generate_weights()
+        self.weights = weights
 
     def create_car_body(self, position, angle):
         mass = 1
-        moment = pymunk.moment_for_box(mass, (self.screen_width / 45, self.screen_height / 35))
+        moment = pymunk.moment_for_box(mass, (self.screen_width / 70, self.screen_height / 50))
         car_body = pymunk.Body(mass, moment)
         car_body.position = position
         car_body.angle = angle
@@ -42,7 +44,7 @@ class Car:
         return car_body
 
     def create_car_shape(self, car_body):
-        car_shape = pymunk.Poly.create_box(car_body, (self.screen_width / 45, self.screen_height / 35))
+        car_shape = pymunk.Poly.create_box(car_body, (self.screen_width / 70, self.screen_height / 50))
         car_shape.friction = 0
         car_shape.collision_type = constants.CAR_COLLISION_TYPE
         car_shape.car_id = self.id
@@ -97,32 +99,9 @@ class Car:
                 # Draw the sensor lines
                 pygame.draw.line(screen, (255, 0, 0), sensor_start_pygame, sensor_end_pygame, constants.SENSOR_WIDTH)
 
-    def get_sensors_lengths_for_calculation(self):
-        sensors_values = [sensor / 1000 for sensor in list(self.sensors.values())]
-        while len(sensors_values) < constants.SENSORS_NUMBER:
-            sensors_values.append(constants.SENSOR_LENGTH * 3/1000)
-        return sensors_values
-
-    def set_car_angle(self):
-        if time.time() - self.last_time_crossed_checkpoint > constants.WAIT_SECONDS_FOR_NO_CHECKPOINT:
-            self.is_active = False
-        else:
-            sensors = self.get_sensors_lengths_for_calculation()
-            temp_angle = self.car_body.angle
-            self.car_body.angle = temp_angle + drive(sensors, self)
-
-    @staticmethod
-    def generate_weights():
-        total_weights_needed = 0
-        input_size = constants.SENSORS_NUMBER
-
-        # Calculate the total number of weights needed
-        for layer_size in constants.NETWORK_HIDDEN_LAYERS + [1]:
-            total_weights_needed += layer_size * input_size
-            input_size = layer_size
-
-        # Generate the weights
-        return [random.uniform(-1, 1) for _ in range(total_weights_needed)]
+    def deactivate_car(self):
+        self.is_active = False
+        self.finish_time = time.time()
 
     def __repr__(self):
         return f'Car(id={self.id})'

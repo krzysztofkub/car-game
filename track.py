@@ -42,7 +42,7 @@ class Track:
                 # Boarder:
                 pymunk.Segment(space.static_body, (50, height - 50), (50, 50), 5),
                 pymunk.Segment(space.static_body, (50, height - 50), (width - 50, height - 50), 5),
-                pymunk.Segment(space.static_body, (width - 50, height - 50), (width - 50, 50), 5),
+                pymunk.Segment(space.static_body, (width - 50, height - 50), (width - 50, 300), 5),
                 pymunk.Segment(space.static_body, (50, 50), (width - 50, 50), 5),
 
                 # Track:

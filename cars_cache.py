@@ -5,7 +5,7 @@ def deactivate_car(car_body):
     filtered_cars = [car for car in cars if car.car_body == car_body]
     if filtered_cars:
         car_to_be_removed = filtered_cars[0]
-        car_to_be_removed.is_active = False
+        car_to_be_removed.deactivate_car()
 
 
 def get_active_cars():
