@@ -1,33 +1,35 @@
 import random
+import time
 
 import pygame
 
 import constants
+from neural_network_calculation import NeuralNetwork
 
 
-# TODO implement driving alogrithm
-def drive(sensors):
+def get_sensors_lengths_for_calculation(car):
+    sensors_values = [sensor / 1000 for sensor in list(car.sensors.values())]
+    while len(sensors_values) < constants.SENSORS_NUMBER:
+        sensors_values.append(constants.SENSOR_LENGTH * 3 / 1000)
+    return sensors_values
+
+
+def set_car_angle(car):
+    sensors = get_sensors_lengths_for_calculation(car)
+    temp_angle = car.car_body.angle
+    car.car_body.angle = temp_angle + drive(sensors, car)
+
+
+def drive(sensors, car):
     if constants.MANUAL_DRIVE:
         return manual_drive()
     else:
-        return auto_drive(sensors)
+        return auto_drive(sensors, car)
 
 
-def auto_drive(sensors):
-    number_of_sensors = len(sensors)
-    if number_of_sensors == 0:
-        return random.uniform(-0.05, 0.05)
-    if number_of_sensors == 1:
-        return random.uniform(-0.1, 0.1)
-    if number_of_sensors == 2:
-        return random.uniform(-0.2, 0.2)
-    if number_of_sensors == 3:
-        return random.uniform(-0.3, 0.3)
-    if number_of_sensors == 4:
-        return random.uniform(-0.4, 0.4)
-    if number_of_sensors == 5:
-        return random.uniform(-0.8, 0.8)
-    return 0
+def auto_drive(sensors, car):
+    nn = NeuralNetwork(sensors, constants.NETWORK_HIDDEN_LAYERS, car.weights)
+    return nn.calculate()[0]
 
 
 def manual_drive():

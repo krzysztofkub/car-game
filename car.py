@@ -1,4 +1,6 @@
 import math
+import random
+import time
 
 import pygame
 import pymunk
@@ -10,7 +12,7 @@ from driving_algorithm import drive
 
 class Car:
 
-    def __init__(self, space, width, height, id, position=(130, 100), angle=1.51):
+    def __init__(self, space, width, height, id, weights, position=constants.STARTING_POSITION, angle=constants.STARTING_ANGLE):
         self.id = id
         self.is_active = True
         self.collision_type = constants.CAR_COLLISION_TYPE
@@ -25,23 +27,24 @@ class Car:
         self.sensor_shapes = []
         self.sensors = {}
         self.crossed_checkpoints = set()
+        self.last_time_crossed_checkpoint = None
+        self.spawn_time = time.time()
+        self.finish_time = None
         self.add_sensors()
-
-    @classmethod
-    def from_parents(cls, a, b, id):
-        return cls(a.space, a.screen_width, a.screen_height, id, (130, 100), 1.51)
+        self.weights = weights
 
     def create_car_body(self, position, angle):
         mass = 1
-        moment = pymunk.moment_for_box(mass, (self.screen_width / 45, self.screen_height / 35))
+        moment = pymunk.moment_for_box(mass, (self.screen_width / 70, self.screen_height / 50))
         car_body = pymunk.Body(mass, moment)
         car_body.position = position
         car_body.angle = angle
         car_body.collision_type = self.collision_type
+        car_body.car_id = self.id
         return car_body
 
     def create_car_shape(self, car_body):
-        car_shape = pymunk.Poly.create_box(car_body, (self.screen_width / 45, self.screen_height / 35))
+        car_shape = pymunk.Poly.create_box(car_body, (self.screen_width / 70, self.screen_height / 50))
         car_shape.friction = 0
         car_shape.collision_type = constants.CAR_COLLISION_TYPE
         car_shape.car_id = self.id
@@ -96,16 +99,9 @@ class Car:
                 # Draw the sensor lines
                 pygame.draw.line(screen, (255, 0, 0), sensor_start_pygame, sensor_end_pygame, constants.SENSOR_WIDTH)
 
-    def set_car_angle(self):
-        sensors = self.sensors
-        temp_angle = self.car_body.angle
-        self.car_body.angle = temp_angle + drive(sensors)
-
-    def remove_from_space(self):
-        for sensor in self.sensor_shapes:
-            self.space.remove(sensor)
-        for shape in self.car_body.shapes:
-            self.space.remove(shape)
+    def deactivate_car(self):
+        self.is_active = False
+        self.finish_time = time.time()
 
     def __repr__(self):
         return f'Car(id={self.id})'
