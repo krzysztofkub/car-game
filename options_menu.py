@@ -3,6 +3,7 @@ import random
 import pygame
 
 import cars_cache
+import children_generator
 
 
 class OptionsMenu:
@@ -24,10 +25,10 @@ class OptionsMenu:
             self.draw_option_menu()
 
     def draw_option_menu(self):
-        self.overlay.fill((0, 0, 0, 128))  # Semi-transparent black
+        self.overlay.fill((0, 0, 0, 128))
         self.game_setup.screen.blit(self.overlay, (0, 0))
         font = pygame.font.Font(None, 36)
-        text = font.render(f'Generation number: {cars_cache.cars_generation}', True, (255, 255, 255))
+        text = font.render(f'Generation number: {children_generator.cars_generation}', True, (255, 255, 255))
         text_rect = text.get_rect(center=(self.game_setup.width // 2, self.game_setup.height // 4))
 
         button_font = pygame.font.Font(None, 36)

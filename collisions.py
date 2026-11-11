@@ -1,7 +1,9 @@
-import pygame
+import time
 
+import pygame
+import pymunk
 import constants
-from cars_cache import remove_car, get_car, get_cars
+from cars_cache import deactivate_car, get_car
 
 
 def define_collision(space):
@@ -34,8 +36,9 @@ def car_and_checkpoint_collision(arbiter, space, data):
     if car_shape is not None and checkpoint_shape is not None:
         car_id = int(car_shape.car_id)
         car = get_car(car_id)
-        car.crossed_checkpoints.add(checkpoint_shape.checkpoint_id)
-        print(car.crossed_checkpoints)
+        if checkpoint_shape.checkpoint_id not in car.crossed_checkpoints:
+            car.crossed_checkpoints.add(checkpoint_shape.checkpoint_id)
+            car.last_time_crossed_checkpoint = time.time()
 
     return False
 
@@ -46,7 +49,7 @@ def car_and_wall_collision(arbiter, space, data):
         if shape.collision_type == 1:
             car_body = shape.body
     if car_body is not None:
-        remove_car(car_body)
+        deactivate_car(car_body)
 
     return True
 
@@ -58,7 +61,6 @@ def sensor_begin(arbiter, space, data):
             sensor_shape = shape
             break
     if sensor_shape is not None:
-        print(f"{sensor_shape.sensor_name} BEGIN")
         car = get_car_by_sensor_shape(sensor_shape)
         if car is not None:
             car.sensors[sensor_shape.sensor_name] = constants.SENSOR_LENGTH
@@ -90,7 +92,6 @@ def sensor_separate(arbiter, space, data):
             break
 
     if sensor_shape is not None:
-        print(f"{sensor_shape.sensor_name} FINISH")
         car = get_car_by_sensor_shape(sensor_shape)
         if car is not None and sensor_shape.sensor_name in car.sensors:
             car.sensors.pop(sensor_shape.sensor_name)
